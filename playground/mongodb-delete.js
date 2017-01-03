@@ -9,28 +9,27 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
 
 	console.log('Connected to MongoDB server...');
 
-	// db.collection('Todos').find({
-	// 	_id: new ObjectID('586ab7d24c9ec87bf4538839')
-	// }).toArray().then((docs) => {
-	// 	console.log('Todos....................');
-	// 	console.log(JSON.stringify(docs, undefined, 2));
-	// }, (err) => {
-	// 	console.log('Unable to fetch todos', err);
+	// deleteMany
+	// db.collection('Todos').deleteMany({text: 'Eat lunch'}).then((result) => {
+	// 	console.log(result);
 	// });
 
-	// db.collection('Todos').find().count().then((count) => {
-	// 	console.log(`Todos count: ${count}`);
-	// }, (err) => {
-	// 	console.log('Unable to fetch todos', err);
+	// deleteOne
+	// db.collection('Todos').deleteOne({text: 'Eat lunch'}).then((result) => {
+	// 	console.log(result);
 	// });
 
-	db.collection('Users').find({
-		name: 'DIN'
-	}).toArray().then((docs) => {
-		console.log('Printing filtered Todos...');
-		console.log(JSON.stringify(docs, undefined, 2));
-	}, (err) => {
-		console.log('Error', err);
+	// findOneAndDelete
+	// db.collection('Todos').findOneAndDelete({completed: false}).then((result) => {
+	// 	console.log(result);
+	// });
+
+	// find dups using delete many
+	db.collection('Users').deleteMany({name: 'DIN'});
+
+	// find one and delete by id
+	db.collection('Users').findOneAndDelete({_id: new ObjectID('586ab2d0b4d2294b75c2800a')}).then((result) => {
+		console.log(JSON.stringify(result, undefined, 2));
 	});
 	//db.close();
 });
