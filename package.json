@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "mongodb": "2.2.5"
+    "mongodb": "2.2.5",
+    "mongoose": "4.5.9"
   }
 }
