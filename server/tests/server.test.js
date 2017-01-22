@@ -11,6 +11,7 @@ const {todos, populateTodos, users, populateUsers} = require('./seed/seed');
 beforeEach(populateUsers);
 beforeEach(populateTodos);
 
+
 describe('POST /todos', () => {
 	it('should create a new todo', (done) => {
 		let text = 'Test todo text';
@@ -26,7 +27,7 @@ describe('POST /todos', () => {
 				if (err) {
 					return done(err);
 				}
-				
+
 				Todo.find({text}).then((todos) => {
 					expect(todos.length).toBe(1);
 					expect(todos[0].text).toBe(text);
@@ -54,6 +55,7 @@ describe('POST /todos', () => {
 
 });
 
+
 describe('GET /todos', () => {
 	it('should get all todos', (done) => {
 		request(app)
@@ -65,6 +67,7 @@ describe('GET /todos', () => {
 			.end(done);
 	});
 });
+
 
 describe('GET /todos:id', () => {
 	it('should return todo doc', (done) => {
@@ -92,6 +95,7 @@ describe('GET /todos:id', () => {
 			.end(done);
 	})
 });
+
 
 describe('DELETE /todos:id', () => {
 	it('should remove a todo', (done) => {
@@ -132,10 +136,11 @@ describe('DELETE /todos:id', () => {
 	});
 });
 
+
 describe('PATCH /todos/:id', () => {
 	let obj = todos[0]._id.toHexString();
 	let text = 'This should be the new text';
-	
+
 	it('should update the todo', (done) => {
 		request(app)
 			.patch(`/todos/${obj}`)
@@ -182,7 +187,7 @@ describe('GET /users/me', () => {
 			})
 			.end(done);
 	});
-	
+
 	it('should return a 401 if unauthenticated', (done) => {
 		request(app)
 			.get('/users/me')
@@ -194,11 +199,12 @@ describe('GET /users/me', () => {
 	});
 });
 
+
 describe('POST /users', () => {
 	it('should create a user', (done) => {
 		let email = 'example@example.com',
 			password = '123abc!';
-		
+
 		request(app)
 			.post('/users')
 			.send({email, password})
@@ -212,7 +218,7 @@ describe('POST /users', () => {
 				if (err) {
 					return done(err);
 				}
-				
+
 				User.findOne({email}).then((user) => {
 					expect(user).toExist();
 					expect(user.password).toNotBe(password);
@@ -220,7 +226,7 @@ describe('POST /users', () => {
 				}).catch((e) => done(e));
 			});
 	});
-	
+
 	it('should return validation errors if the request is invalid', (done) => {
 		request(app)
 			.post('/users')
@@ -231,13 +237,13 @@ describe('POST /users', () => {
 			})
 			.end(done);
 	});
-	
+
 	it('should not create user if the email is already in use', (done) => {
 		request(app)
 			.post('/users')
 			.expect(400)
 			.send({
-				email: users[0].email, 
+				email: users[0].email,
 				password: 'Password123!'
 			})
 			.end(done);
@@ -261,7 +267,7 @@ describe('POST /users/login', () => {
 				if (err) {
 					return done(err);
 				}
-				
+
 				User.findById(users[1]._id).then((user) => {
 					expect(user.tokens[0]).toInclude({
 						access: 'auth',
@@ -293,5 +299,28 @@ describe('POST /users/login', () => {
 					done();
 				}).catch((e) => done(e));
 			});
+	});
+});
+
+
+describe('DELETE /users/me/token', () => {
+	it('should remove auth token on logout', (done) => {
+		request(app)
+			.delete('/users/me/token')
+			.set({
+				'x-auth': users[0].tokens[0].token
+			})
+			.expect(200)
+			.end((err, res) => {
+				if (err) {
+					return done(err);
+				}
+				
+				User.findById(users[0]._id).then((user) => {
+					expect(user.tokens.length).toBe(0);
+					done();
+				}).catch((e) => done(e));
+			});
+		
 	});
 });
