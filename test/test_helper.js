@@ -5,12 +5,12 @@ const mongoose = require('mongoose');
 before((done) => {
 	mongoose.connect('mongodb://localhost/users_test'); // specify the db to connect to
 	mongoose.connection
-		.once('open', () => {done(); }) // only run this event once
+		.once('open', () => { done(); }) // only run this event once
 		.on('error', (error) => { // run this event whenever an error event happens
 			console.warn('Warning', error);
 		});
-	done();
 });
+
 beforeEach((done) => {
 	mongoose.connection.collections.users.drop(() => {
 		// Ready to run the next test
