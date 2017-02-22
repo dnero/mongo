@@ -5,7 +5,7 @@
   "repository": {},
   "license": "MIT",
   "scripts": {
-    "test": "mocha"
+    "test": "nodemon --exec 'mocha -R min"
   },
   "dependencies": {
     "mocha": "^3.2.0",
