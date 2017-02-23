@@ -55,6 +55,6 @@ describe('Subdocuments', () => {
 			.then((user) => {
 				assert(user.posts.length === 0);
 				done();
-			})
+			});
 	});
 });
