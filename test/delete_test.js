@@ -2,7 +2,7 @@ const assert = require('assert');
 const User = require('../src/user');
 
 describe('Deleting a user', () => {
-	let joe;
+	var joe;
 
 	beforeEach((done) => {
 		joe = new User({ name: 'Joe' });

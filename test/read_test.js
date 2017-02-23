@@ -2,7 +2,7 @@ const assert = require('assert');
 const User = require('../src/user');
 
 describe('Reading users out of the db', () => {
-	let joe;
+	var joe;
 
 	beforeEach((done) => {
 		joe = new User({ name: 'Joe' });
