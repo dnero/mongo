@@ -19,10 +19,16 @@ const UserSchema = new Schema({
 	}]
 });
 
-UserSchema.virtual('postCount').get(function() {
+UserSchema.virtual('postCount').get(function() { // virtual properties do not get persisted in the db
 	return this.posts.length;
 });
 
-const User = mongoose.model('user', UserSchema);
+UserSchema.pre('remove', function (next) {
+	const BlogPost = mongoose.model('blogPost'); // reference to the blogPost model
+	BlogPost.remove({ _id: { $in: this.blogPosts } }) // remove all blogposts with an id $in this/UserSchema.blogPosts
+		.then(() => next()); // afterwards move on
+});
 
-module.exports = User;
+const User = mongoose.model('user', UserSchema); // add this schema setup to the 'user' model
+
+module.exports = User; // export it for useage elsewhere
